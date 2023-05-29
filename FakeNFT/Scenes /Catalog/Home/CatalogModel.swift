@@ -4,9 +4,7 @@ protocol CatalogModelProtocol {
     func getNFTCollections(completion: @escaping (Result<[NFTCollection], Error>) -> Void)
 }
 
-struct NFTListRequest: NetworkRequest {
-    var endpoint: URL?
-}
+
 
 class CatalogModel: CatalogModelProtocol {
     var networkClient: DefaultNetworkClient?
@@ -22,7 +20,7 @@ class CatalogModel: CatalogModelProtocol {
             completion(.failure(NSError(domain: "Invalid URL", code: 1)))
             return
         }
-        let request = NFTListRequest(endpoint: url)
+        let request = AnyRequest(endpoint: url)
         networkClient.send(request: request, type: [NFTCollection].self) { result in
             switch result {
             case .success(let data):

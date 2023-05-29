@@ -21,6 +21,7 @@ extension UIFont {
 enum FontNames: String {
     case SFProDisplaySemibold
     case SFProTextMedium
+    case SFProTextRegular
     case SFProTextBold
     case SFProDisplayBold
     case SFProDisplayRegular
@@ -34,6 +35,8 @@ final class CustomFont: UIFont {
             return UIFont(name: "SFProDisplay-Semibold", size: size) ?? defaultFont
         case .SFProTextMedium:
             return UIFont(name: "SFProText-Medium", size: size) ?? defaultFont
+        case .SFProTextRegular:
+            return UIFont(name: "SFProText-Regular", size: size) ?? defaultFont
         case .SFProTextBold:
             return UIFont(name: "SFProText-Bold", size: size) ?? defaultFont
         case .SFProDisplayBold:

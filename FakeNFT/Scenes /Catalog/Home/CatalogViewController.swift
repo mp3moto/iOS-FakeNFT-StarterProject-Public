@@ -9,7 +9,7 @@ class CatalogNavigationViewController: UINavigationController {
 
 class CatalogViewController: UIViewController {
     var viewModel: CatalogViewModelProtocol?
-
+    private let networkClient = DefaultNetworkClient()
     private let navBar = UINavigationBar()
     private let collectionsTableView = UITableView()
     
@@ -18,7 +18,7 @@ class CatalogViewController: UIViewController {
         setupUI()
         configureTable()
         setupConstraints()
-        initialize(viewModel: CatalogViewModel(model: CatalogModel(networkClient: DefaultNetworkClient())))
+        initialize(viewModel: CatalogViewModel(model: CatalogModel(networkClient: networkClient)))
         viewModel?.onNFTCollectionsUpdate = { [weak self] in
             DispatchQueue.main.async {
                 self?.collectionsTableView.reloadData()
@@ -102,5 +102,11 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         213
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        guard let collectionId = viewModel?.getCellViewModel(at: indexPath)?.id else { return }
+        navigationController?.pushViewController(CollectionViewController(nftCollectionId: collectionId, networkClient: networkClient), animated: true)
     }
 }

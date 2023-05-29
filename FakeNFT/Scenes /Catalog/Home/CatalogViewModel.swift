@@ -1,23 +1,5 @@
 import Foundation
 
-//MARK: вынести все структуры в одно место, куда укажет команда
-struct NFTCollection: Codable {
-    let createdAt: String
-    let name: String
-    let cover: String
-    let nfts: [Int]
-    let description: String
-    let author: Int
-    let id: String
-}
-
-struct NFTCollectionListItem {
-    let id: Int
-    let name: String
-    let cover: String
-    let nftsCount: Int
-}
-
 enum SortAttribute {
     case name
     case nftCount
@@ -52,7 +34,6 @@ class CatalogViewModel: CatalogViewModelProtocol {
                 self?.NFTCollections = data
                 self?.NFTCollectionsCount = data.count
                 self?.NFTCollectionsList = self?.convert(collection: data)
-                //self?.NFTCollectionsList?.sort { $0.name < $1.name }
                 self?.onNFTCollectionsUpdate?()
             case .failure(let error):
                 print(error.localizedDescription)
