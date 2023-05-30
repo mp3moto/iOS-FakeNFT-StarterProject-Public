@@ -1,6 +1,6 @@
 import UIKit
 
-class CollectionViewController: UIViewController {
+final class CollectionViewController: UIViewController {
     var viewModel: CollectionViewModelProtocol?
     var nftCollectionId: Int
     var networkClient: NetworkClient
@@ -101,7 +101,7 @@ class CollectionViewController: UIViewController {
         return label
     }()
     
-    private let collection: UICollectionView = {
+    private let nftItemsCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.translatesAutoresizingMaskIntoConstraints = false
         return collection
@@ -155,6 +155,7 @@ class CollectionViewController: UIViewController {
         authorView.addSubview(collectionAuthorLabel)
         authorView.addSubview(collectionAuthorNameLabel)
         contentView.addSubview(collectionDescriptionLabel)
+        contentView.addSubview(nftItemsCollectionView)
         
         collectionAuthorNameLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showAuthorsWebsite)))
     }
@@ -201,7 +202,12 @@ class CollectionViewController: UIViewController {
             collectionDescriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionDescriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            contentView.bottomAnchor.constraint(equalTo: collectionDescriptionLabel.bottomAnchor)
+            nftItemsCollectionView.topAnchor.constraint(equalTo: collectionDescriptionLabel.bottomAnchor, constant: 24),
+            nftItemsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            nftItemsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            nftItemsCollectionView.heightAnchor.constraint(equalToConstant: 300),
+            
+            contentView.bottomAnchor.constraint(equalTo: nftItemsCollectionView.bottomAnchor, constant: 20)
         ])
     }
     
@@ -240,7 +246,8 @@ class CollectionViewController: UIViewController {
 
 extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel?.NFTItemsCount ?? 0
+        //viewModel?.NFTItemsCount ?? 0
+        4
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -253,5 +260,15 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        10
+    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 16
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: (collectionView.bounds.width / 3) - 4, height: 192)
+    }
 }

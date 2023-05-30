@@ -1,13 +1,6 @@
 import UIKit
 
-class CatalogNavigationViewController: UINavigationController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        pushViewController(CatalogViewController(), animated: false)
-    }
-}
-
-class CatalogViewController: UIViewController {
+final class CatalogViewController: UIViewController {
     var viewModel: CatalogViewModelProtocol?
     private let networkClient = DefaultNetworkClient()
     private let navBar = UINavigationBar()
@@ -19,11 +12,6 @@ class CatalogViewController: UIViewController {
         configureTable()
         setupConstraints()
         initialize(viewModel: CatalogViewModel(model: CatalogModel(networkClient: networkClient)))
-        viewModel?.onNFTCollectionsUpdate = { [weak self] in
-            DispatchQueue.main.async {
-                self?.collectionsTableView.reloadData()
-            }
-        }
         viewModel?.getNFTCollections()
     }
     
@@ -65,7 +53,9 @@ class CatalogViewController: UIViewController {
     func bind() {
         viewModel?.onNFTCollectionsUpdate = { [weak self] in
             guard let self = self else { return }
-            self.collectionsTableView.reloadData()
+            DispatchQueue.main.async { [weak self] in
+                self?.collectionsTableView.reloadData()
+            }
         }
     }
     

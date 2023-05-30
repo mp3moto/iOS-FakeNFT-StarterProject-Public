@@ -4,9 +4,7 @@ protocol CatalogModelProtocol {
     func getNFTCollections(completion: @escaping (Result<[NFTCollection], Error>) -> Void)
 }
 
-
-
-class CatalogModel: CatalogModelProtocol {
+final class CatalogModel: CatalogModelProtocol {
     var networkClient: DefaultNetworkClient?
     
     init(networkClient: DefaultNetworkClient) {

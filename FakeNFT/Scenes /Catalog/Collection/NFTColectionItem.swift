@@ -27,7 +27,7 @@ final class NFTColectionItem: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        setupConstraints()
+        //setupConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -35,7 +35,8 @@ final class NFTColectionItem: UICollectionViewCell {
     }
     
     func setupUI() {
-        contentView.addSubview(nftImage)
+        contentView.backgroundColor = .blue
+        //contentView.addSubview(nftImage)
     }
     
     func setupConstraints() {
@@ -43,7 +44,7 @@ final class NFTColectionItem: UICollectionViewCell {
             nftImage.topAnchor.constraint(equalTo: contentView.topAnchor),
             nftImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nftImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            nftImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0.6279)
+            nftImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 108),
             //nftImage.widthAnchor.constraint(equalToConstant: 0)
             //nftImage.heightAnchor.constraint(equalToConstant: 108),
             
@@ -52,6 +53,6 @@ final class NFTColectionItem: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        nftImage.kf.cancelDownloadTask()
+        //nftImage.kf.cancelDownloadTask()
     }
 }

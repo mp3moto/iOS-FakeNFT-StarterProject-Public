@@ -16,7 +16,7 @@ protocol CatalogViewModelProtocol {
     func sortNFTCollections(by: SortAttribute)
 }
 
-class CatalogViewModel: CatalogViewModelProtocol {
+final class CatalogViewModel: CatalogViewModelProtocol {
     var onNFTCollectionsUpdate: (() -> Void)?
     var NFTCollections: [NFTCollection]?
     var NFTCollectionsList: [NFTCollectionListItem]?
@@ -29,12 +29,13 @@ class CatalogViewModel: CatalogViewModelProtocol {
     
     func getNFTCollections() {
         model.getNFTCollections { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let data):
-                self?.NFTCollections = data
-                self?.NFTCollectionsCount = data.count
-                self?.NFTCollectionsList = self?.convert(collection: data)
-                self?.onNFTCollectionsUpdate?()
+                self.NFTCollections = data
+                self.NFTCollectionsCount = data.count
+                self.NFTCollectionsList = self.convert(collection: data)
+                self.onNFTCollectionsUpdate?()
             case .failure(let error):
                 print(error.localizedDescription)
             }
