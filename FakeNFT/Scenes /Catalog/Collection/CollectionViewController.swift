@@ -258,7 +258,7 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SimpleCell.reuseIdentifier, for: indexPath) as? SimpleCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SimpleCell.reuseIdentifier, for: indexPath) as? SimpleCell,
               let cellViewModel = viewModel.nftCollection
         else { return UICollectionViewCell() }
         
