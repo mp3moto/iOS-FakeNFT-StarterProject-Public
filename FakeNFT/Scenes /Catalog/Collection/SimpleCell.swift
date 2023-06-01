@@ -1,15 +1,14 @@
 import UIKit
-//import Kingfisher
 
-final class NFTColectionItemCell: UICollectionViewCell {
+final class SimpleCell: UICollectionViewCell {
     static let reuseIdentifier = "cell"
     
-    var viewModel: NFTCollection? {
+    var viewModel: NFTCollectionNFTItem? {
         didSet {
             guard let viewModel = viewModel else { return }
             //collectionName.text = "\(viewModel.name) (\(viewModel.nftsCount))"
             
-            if let url = URL(string: viewModel.cover.encodeUrl) {
+            if let url = URL(string: viewModel.image.encodeUrl) {
                 nftImage.kf.setImage(with: url)
             }
         }
@@ -26,20 +25,11 @@ final class NFTColectionItemCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        //setupUI()
-        //setupConstraints()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setupUI() {
+        
         backgroundColor = .blue
-        //contentView.addSubview(nftImage)
-    }
-    
-    func setupConstraints() {
+        
+        contentView.addSubview(nftImage)
+        
         NSLayoutConstraint.activate([
             nftImage.topAnchor.constraint(equalTo: contentView.topAnchor),
             nftImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -51,8 +41,7 @@ final class NFTColectionItemCell: UICollectionViewCell {
         ])
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        //nftImage.kf.cancelDownloadTask()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

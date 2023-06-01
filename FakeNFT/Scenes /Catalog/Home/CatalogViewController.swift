@@ -95,8 +95,18 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         guard let collectionId = viewModel?.getCellViewModel(at: indexPath)?.id else { return }
-        navigationController?.pushViewController(CollectionViewController(nftCollectionId: collectionId, networkClient: networkClient), animated: true)
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.pushViewController(
+            CollectionViewController(
+                viewModel: CollectionViewModel(
+                    model: CollectionModel(networkClient: networkClient),
+                    nftCollectionId: collectionId,
+                    networkClient: networkClient
+                )
+            ),
+            animated: true
+        )
     }
 }

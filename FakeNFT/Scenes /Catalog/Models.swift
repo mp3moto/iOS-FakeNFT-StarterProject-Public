@@ -25,7 +25,7 @@ struct NFTCollectionAuthor: Codable {
     let name: String
     let website: String
 }
-/*
+
 struct NFTCollectionNFTItem {
     let id: Int
     let image: String
@@ -36,6 +36,24 @@ struct NFTCollectionNFTItem {
     let inCart: Bool
 }
 
+struct NFTItem: Codable {
+    let createdAt: String
+    let name: String
+    let images: [String]
+    let rating: Int
+    let description: String
+    let price: Double
+    let id: String
+}
+
+struct NFTLiked: Codable {
+    let likes: String
+}
+
+struct NFTsInCart: Codable {
+    let nfts: String
+}
+/*
 struct NFTCollectionView {
     let cover: String
     let name: String

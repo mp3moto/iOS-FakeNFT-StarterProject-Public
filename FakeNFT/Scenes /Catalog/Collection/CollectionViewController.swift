@@ -1,9 +1,9 @@
 import UIKit
 
 final class CollectionViewController: UIViewController {
-    var viewModel: CollectionViewModelProtocol?
-    var nftCollectionId: Int
-    var networkClient: NetworkClient
+    var viewModel: CollectionViewModelProtocol
+    //var nftCollectionId: Int
+    //var networkClient: NetworkClient
     
     private let contentView: UIView = {
         let view = UIView(frame: .zero)
@@ -107,9 +107,10 @@ final class CollectionViewController: UIViewController {
         return collection
     }()
     
-    init(nftCollectionId: Int, networkClient: NetworkClient) {
-        self.nftCollectionId = nftCollectionId
-        self.networkClient = networkClient
+    init(viewModel: CollectionViewModelProtocol) {
+        //self.nftCollectionId = nftCollectionId
+        //self.networkClient = networkClient
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -119,26 +120,32 @@ final class CollectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        nftItemsCollectionView.register(SimpleCell.self, forCellWithReuseIdentifier: SimpleCell.reuseIdentifier)
+        nftItemsCollectionView.dataSource = self
+        nftItemsCollectionView.delegate = self
+        
         setupUI()
         setupConstraints()
+        bind()
         
-        initialize(viewModel: CollectionViewModel(model: CollectionModel(networkClient: networkClient)))
+        //initialize(viewModel: CollectionViewModel(model: CollectionModel(networkClient: networkClient)))
         //TODO: 🤔 наверное, лучше передать готовую структуру из родительского ViewController, чем запрашивать заново
-            viewModel?.getNFTCollectionInfo(id: nftCollectionId)
+            viewModel.getNFTCollectionInfo()
         //----------
+        
     }
-    
+    /*
     func initialize(viewModel: CollectionViewModelProtocol) {
         self.viewModel = viewModel
         bind()
     }
-    
+    */
     func bind() {
-        viewModel?.onNFTCollectionInfoUpdate = { [weak self] in
+        viewModel.onNFTCollectionInfoUpdate = { [weak self] in
             guard let self = self else { return }
             self.updateNFTCollectionDetails()
         }
-        viewModel?.onNFTAuthorUpdate = { [weak self] in
+        viewModel.onNFTAuthorUpdate = { [weak self] in
             guard let self = self else { return }
             self.updateNFTCollectionAuthor()
         }
@@ -213,50 +220,49 @@ final class CollectionViewController: UIViewController {
     
     func updateNFTCollectionDetails() {
         print("updateNFTCollectionDetails called")
-        guard let url = URL(string: viewModel?.NFTCollection?.cover.encodeUrl ?? "") else { return }
+        guard let url = URL(string: viewModel.nftCollection?.cover.encodeUrl ?? "") else { return }
+        
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
-                  let viewModel = self.viewModel,
-                  let NFTCollection = viewModel.NFTCollection
+                  let NFTCollection = self.viewModel.nftCollection
             else { return }
             self.collectionCover.kf.setImage(with: url)
             self.collectionNameLabel.text = NFTCollection.name
             self.collectionDescriptionLabel.text = NFTCollection.description
             self.collectionDescriptionLabel.sizeToFit()
         }
-        guard let authorId = viewModel?.NFTCollection?.author else { return }
-        viewModel?.getNFTCollectionAuthor(id: authorId)
+        guard let authorId = viewModel.nftCollection?.author else { return }
+        viewModel.getNFTCollectionAuthor(id: authorId)
     }
     
     func updateNFTCollectionAuthor() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
-                  let viewModel = self.viewModel,
-                  let NFTCollectionAuthor = viewModel.NFTCollectionAuthor
+                  let NFTCollectionAuthor = self.viewModel.nftCollectionAuthor
             else { return }
             self.collectionAuthorNameLabel.text = NFTCollectionAuthor.name
         }
     }
     
     @objc private func showAuthorsWebsite(sender: UITapGestureRecognizer) {
-        guard let url = URL(string: viewModel?.NFTCollectionAuthor?.website.encodeUrl ?? "") else { return }
+        guard let url = URL(string: viewModel.nftCollectionAuthor?.website.encodeUrl ?? "") else { return }
         navigationController?.pushViewController(CollectionsAuthorWebsiteViewController(website: url), animated: true)
     }
 }
 
 extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //viewModel?.NFTItemsCount ?? 0
-        4
+        //print("viewModel NFTItemsCount = \(viewModel.NFTItemsCount)")
+        return viewModel.NFTItemsCount ?? 0
+        //4
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NFTColectionItem.reuseIdentifier, for: indexPath) as? NFTColectionItem,
-              let viewModel = viewModel,
-              let cellViewModel = viewModel.NFTCollection
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SimpleCell.reuseIdentifier, for: indexPath) as? SimpleCell
+              let cellViewModel = viewModel.nftCollection
         else { return UICollectionViewCell() }
         
-        cell.viewModel = cellViewModel
+        //cell.viewModel = cellViewModel
         return cell
     }
     
