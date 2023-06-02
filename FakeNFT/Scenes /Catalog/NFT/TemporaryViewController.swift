@@ -21,8 +21,8 @@ final class TemporaryViewController: UIViewController {
     }
     
     @objc private func openSlideShow() {
-        let slide1 = NFTImageSlideViewController(image: UIImage(named: "nftSample")!)
-        let slide2 = NFTImageSlideViewController(image: UIImage(named: "cover")!)
+        let slide1 = NFTImageSlideViewController(image: UIImage(named: "nftSample")!, asChildView: false)
+        let slide2 = NFTImageSlideViewController(image: UIImage(named: "cover")!, asChildView: false)
         let vc = NFTImageSlideShowPageViewController(orderedViewControllers: [slide1, slide2])
         present(vc, animated: true)
     }

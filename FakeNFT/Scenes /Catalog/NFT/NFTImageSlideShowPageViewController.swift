@@ -6,8 +6,6 @@ final class NFTImageSlideShowPageViewController: UIPageViewController {
     
     init(orderedViewControllers: [UIViewController]) {
         self.orderedViewControllers = orderedViewControllers
-        //super.init()
-        //super.init(nibName: nil, bundle: nil)
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal)
     }
     
@@ -28,14 +26,15 @@ final class NFTImageSlideShowPageViewController: UIPageViewController {
         pageViewController(self, didUpdatePageCount: orderedViewControllers.count)
         
         pageControl.translatesAutoresizingMaskIntoConstraints = false
-        pageControl.currentPageIndicatorTintColor = UIColor(named: "YPBlack")
-        pageControl.pageIndicatorTintColor = UIColor(named: "YPBlack")?.withAlphaComponent(0.3)
+        pageControl.currentPageIndicatorTintColor = UIColor(named: "NFTBlack")
+        pageControl.pageIndicatorTintColor = UIColor(named: "NFTBlack")?.withAlphaComponent(0.3)
         view.addSubview(pageControl)
         
         NSLayoutConstraint.activate([
-            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -1*(50+60+24)),
+            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
             pageControl.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
         ])
+        
     }
 }
 
