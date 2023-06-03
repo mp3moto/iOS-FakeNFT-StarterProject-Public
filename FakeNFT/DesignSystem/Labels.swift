@@ -1,7 +1,9 @@
 import UIKit
 
 enum LabelStyles: String {
-    case NFTCollectionNameInNFTCollectionList
+    case nftCollectionNameInNFTCollectionList
+    case nftName
+    case priceLabel
 }
 
 final class CustomLabel: UILabel {
@@ -11,9 +13,18 @@ final class CustomLabel: UILabel {
         super.init(frame: .zero)
         self.style = style
         translatesAutoresizingMaskIntoConstraints = false
+        
         switch style {
-        case .NFTCollectionNameInNFTCollectionList:
+        case .nftCollectionNameInNFTCollectionList:
             font = CustomFont.font(name: .SFProTextBold, size: 17)
+        case .nftName:
+            font = CustomFont.font(name: .SFProTextBold, size: 22)
+        case .priceLabel:
+            font = CustomFont.font(name: .SFProTextRegular, size: 15)
+        }
+        
+        switch style {
+        case .nftCollectionNameInNFTCollectionList, .nftName, .priceLabel:
             textColor = UIColor.NFTBlack
         }
     }

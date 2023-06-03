@@ -29,7 +29,7 @@ final class CatalogCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private let collectionName = CustomLabel(style: .NFTCollectionNameInNFTCollectionList)
+    private let collectionName = CustomLabel(style: .nftCollectionNameInNFTCollectionList)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
