@@ -64,6 +64,10 @@ final class NFTViewController: UIViewController {
         return button
     }()
     
+    //TODO: Сделать это зависимостью от протокола
+    private let convertService = FakeConvertService()
+    
+    private let priceListTableView = ContentSizedTableView()
     
     init(id: Int) {
         self.id = id
@@ -84,6 +88,12 @@ final class NFTViewController: UIViewController {
     //TODO: перенести это в экран коллекции при тапе на ячейку
     private func setupNavigationBar() {
         //navigationItem.backBarButtonItem = UIBarButtonItem(title: "", image: nil, target: nil, action: nil)
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        //appearance.configureWithOpaqueBackground()
+
+        //UINavigationBar.appearance().standardAppearance = appearance
+        navigationController?.navigationBar.standardAppearance = appearance
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         //navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "noLike"), style: .plain, target: self, action: #selector(toggleLike))
         
@@ -113,21 +123,28 @@ final class NFTViewController: UIViewController {
         nftPriceView.addSubview(nftPriceLabel)
         nftPriceView.addSubview(nftPriceValueLabel)
         nftPriceView.addSubview(nftAddToCartButton)
-        
-        //nftInfoView.
-        
+        contentView.addSubview(priceListTableView)
+
         nftName.text = "Daisy"
         nftCollectionName.text = "Peach"
         nftPriceLabel.text = "Цена"
         nftPriceValueLabel.text = "1,78 ETH"
         
+        priceListTableView.translatesAutoresizingMaskIntoConstraints = false
+        priceListTableView.register(PriceListTableCell.self, forCellReuseIdentifier: PriceListTableCell.reuseIdentifier)
+        priceListTableView.separatorInset = UIEdgeInsets.zero
+        priceListTableView.layoutMargins = UIEdgeInsets.zero
+        priceListTableView.dataSource = self
+        priceListTableView.delegate = self
+        
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            scrollView.topAnchor.constraint(equalTo:  view.topAnchor, constant: 0),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor),
+            //scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            contentView.topAnchor.constraint(equalTo: view.topAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
@@ -177,7 +194,14 @@ final class NFTViewController: UIViewController {
             nftAddToCartButton.trailingAnchor.constraint(equalTo: nftPriceView.trailingAnchor),
             nftAddToCartButton.bottomAnchor.constraint(equalTo: nftPriceView.bottomAnchor),
             
-            contentView.bottomAnchor.constraint(equalTo: nftPriceView.bottomAnchor)
+            priceListTableView.topAnchor.constraint(equalTo: nftPriceView.bottomAnchor, constant: 24),
+            priceListTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            priceListTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            priceListTableView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -149),
+            //priceListTableView.heightAnchor.constraint(equalToConstant: 2000),
+            
+            //contentView.bottomAnchor.constraint(equalTo: priceListTableView.bottomAnchor)
+            contentView.bottomAnchor.constraint(greaterThanOrEqualTo: scrollView.bottomAnchor),
         ])
     }
     
@@ -214,4 +238,28 @@ final class NFTViewController: UIViewController {
     @objc private func toggleLike() {
         
     }
+}
+
+extension NFTViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        convertService.currenciesCount
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PriceListTableCell.reuseIdentifier, for: indexPath) as? PriceListTableCell
+              //let viewModel = ,
+              //let cellViewModel = viewModel.getCellViewModel(at: indexPath)
+        else { return CatalogCell() }
+        
+        //cell.separatorInset = UIEdgeInsets(top: 0, left: cell.bounds.size.width, bottom: 0, right: 0)
+        //cell.viewModel = cellViewModel
+        cell.viewModel = NFTPriceListItem(cryptocurrency: convertService.getCryptocurrencies()[indexPath.row])
+        return cell
+    }
+    
+    
 }

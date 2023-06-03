@@ -39,6 +39,7 @@ extension UIColor {
     
     //Renat
     static let NFTBlack = UIColor(named: "NFTBlack") ?? UIColor.black
+    static let NFTAlwaysBlack = UIColor(named: "NFTAlwaysBlack") ?? UIColor.black
     static let NFTWhite = UIColor(named: "NFTWhite") ?? UIColor.white
     static let NFTLinkBlue = UIColor(named: "NFTLinkBlue") ?? UIColor.blue
     static let starYellow = UIColor(named: "starYellow") ?? UIColor.yellow

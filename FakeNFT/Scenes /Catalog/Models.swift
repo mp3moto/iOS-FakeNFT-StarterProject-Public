@@ -62,3 +62,12 @@ struct NFTCollectionView {
     let nfts: [NFTCollectionNFTItem]
 }
 */
+
+struct Cryptocurrency {
+    let name: String
+    let shortname: CryptoCoin
+}
+
+struct NFTPriceListItem {
+    let cryptocurrency: Cryptocurrency
+}
