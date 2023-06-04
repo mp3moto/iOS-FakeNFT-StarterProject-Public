@@ -101,12 +101,15 @@ final class CollectionViewController: UIViewController {
         return label
     }()
     
+    private let nftItemsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    
+    /*
     private let nftItemsCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.translatesAutoresizingMaskIntoConstraints = false
         return collection
     }()
-    
+    */
     init(viewModel: CollectionViewModelProtocol) {
         //self.nftCollectionId = nftCollectionId
         //self.networkClient = networkClient
@@ -120,7 +123,8 @@ final class CollectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        nftItemsCollectionView.register(SimpleCell.self, forCellWithReuseIdentifier: SimpleCell.reuseIdentifier)
+        //nftItemsCollectionView.register(SimpleCell.self, forCellWithReuseIdentifier: SimpleCell.reuseIdentifier)
+        nftItemsCollectionView.translatesAutoresizingMaskIntoConstraints = false
         nftItemsCollectionView.dataSource = self
         nftItemsCollectionView.delegate = self
         
@@ -148,6 +152,10 @@ final class CollectionViewController: UIViewController {
         viewModel.onNFTAuthorUpdate = { [weak self] in
             guard let self = self else { return }
             self.updateNFTCollectionAuthor()
+        }
+        viewModel.onNFTItemsUpdate = { [weak self] in
+            guard let self = self else { return }
+            self.updateNFTCollectionItems()
         }
     }
     
@@ -212,7 +220,8 @@ final class CollectionViewController: UIViewController {
             nftItemsCollectionView.topAnchor.constraint(equalTo: collectionDescriptionLabel.bottomAnchor, constant: 24),
             nftItemsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nftItemsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            nftItemsCollectionView.heightAnchor.constraint(equalToConstant: 300),
+            nftItemsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            //nftItemsCollectionView.heightAnchor.constraint(equalToConstant: 300),
             
             contentView.bottomAnchor.constraint(equalTo: nftItemsCollectionView.bottomAnchor, constant: 20)
         ])
@@ -242,6 +251,14 @@ final class CollectionViewController: UIViewController {
             else { return }
             self.collectionAuthorNameLabel.text = NFTCollectionAuthor.name
         }
+        viewModel.getNFTCollectionItems()
+    }
+    
+    func updateNFTCollectionItems() {
+        print(viewModel.nftCollectionItems)
+        /*DispatchQueue.main.async { [weak self] in
+            self?.nftItemsCollectionView.reloadData()
+        }*/
     }
     
     @objc private func showAuthorsWebsite(sender: UITapGestureRecognizer) {
@@ -251,10 +268,15 @@ final class CollectionViewController: UIViewController {
 }
 
 extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        //categories?.count ?? 0
+        1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //print("viewModel NFTItemsCount = \(viewModel.NFTItemsCount)")
-        return viewModel.NFTItemsCount ?? 0
-        //4
+        return viewModel.nftCollectionItemsCount ?? 0
+        //0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

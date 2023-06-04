@@ -1,6 +1,14 @@
 import Foundation
 
 final class CollectionMockViewModel: CollectionViewModelProtocol {
+    var nftCollectionItems: [NFTCollectionNFTItem]?
+    
+    var nftCollectionItemsCount: Int?
+    
+    func getNFTCollectionItems() {
+        
+    }
+    
     var onNFTItemsUpdate: (() -> Void)?
     
     func getNFTItems() {

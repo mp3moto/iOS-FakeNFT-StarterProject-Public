@@ -47,21 +47,12 @@ struct NFTItem: Codable {
 }
 
 struct NFTLiked: Codable {
-    let likes: String
+    let likes: [Int]
 }
 
 struct NFTsInCart: Codable {
-    let nfts: String
+    let nfts: [Int]
 }
-/*
-struct NFTCollectionView {
-    let cover: String
-    let name: String
-    let website: String
-    let description: String
-    let nfts: [NFTCollectionNFTItem]
-}
-*/
 
 struct Cryptocurrency {
     let name: String

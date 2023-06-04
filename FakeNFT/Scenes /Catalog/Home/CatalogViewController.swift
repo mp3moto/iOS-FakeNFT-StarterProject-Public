@@ -98,7 +98,17 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
         guard let collectionId = viewModel?.getCellViewModel(at: indexPath)?.id else { return }
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.pushViewController(
+        let collectionViewModel = CollectionViewModel(
+            model: CollectionModel(
+                networkClient: networkClient
+            ),
+            nftCollectionId: collectionId,
+            networkClient: networkClient
+        )
+        collectionViewModel.nftCollection
+        navigationController?.pushViewController(CollectionViewController(viewModel: collectionViewModel), animated: true)
+        //print(collectionViewModel)
+        /*navigationController?.pushViewController(
             CollectionViewController(
                 viewModel: CollectionViewModel(
                     model: CollectionModel(networkClient: networkClient),
@@ -107,6 +117,6 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
                 )
             ),
             animated: true
-        )
+        )*/
     }
 }

@@ -1,7 +1,7 @@
 import UIKit
 
 final class SimpleCell: UICollectionViewCell {
-    static let reuseIdentifier = "cell"
+    static let reuseIdentifier = "cell01"
     
     var viewModel: NFTCollectionNFTItem? {
         didSet {
@@ -28,13 +28,13 @@ final class SimpleCell: UICollectionViewCell {
         
         backgroundColor = .blue
         
-        contentView.addSubview(nftImage)
+        //contentView.addSubview(nftImage)
         
         NSLayoutConstraint.activate([
-            nftImage.topAnchor.constraint(equalTo: contentView.topAnchor),
-            nftImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            nftImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            nftImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 108),
+            //nftImage.topAnchor.constraint(equalTo: contentView.topAnchor),
+            //nftImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            //nftImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            //nftImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 108),
             //nftImage.widthAnchor.constraint(equalToConstant: 0)
             //nftImage.heightAnchor.constraint(equalToConstant: 108),
             

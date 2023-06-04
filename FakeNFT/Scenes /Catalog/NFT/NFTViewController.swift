@@ -182,8 +182,6 @@ final class NFTViewController: UIViewController {
             nftInfoView.bottomAnchor.constraint(equalTo: nftInfoView.topAnchor, constant: 28),
             
             nftNameAndRatingView.topAnchor.constraint(equalTo: nftInfoView.topAnchor),
-            //nftNameAndRatingView.leadingAnchor.constraint(equalTo: nftInfoView.leadingAnchor),
-            //nftNameAndRatingView.trailingAnchor.constraint(lessThanOrEqualTo: nftInfoView.trailingAnchor),
             nftNameAndRatingView.bottomAnchor.constraint(equalTo: nftInfoView.bottomAnchor),
             
             nftName.centerYAnchor.constraint(equalTo: nftNameAndRatingView.centerYAnchor),
@@ -195,8 +193,8 @@ final class NFTViewController: UIViewController {
             ratingView.trailingAnchor.constraint(lessThanOrEqualTo: nftNameAndRatingView.trailingAnchor),
             
             nftCollectionName.centerYAnchor.constraint(equalTo: nftInfoView.centerYAnchor),
-            //nftCollectionName.leadingAnchor.constraint(equalTo: nftNameAndRatingView.trailingAnchor),
-            //nftCollectionName.trailingAnchor.constraint(lessThanOrEqualTo: nftInfoView.trailingAnchor),
+            nftCollectionName.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor),
+            nftCollectionName.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
             nftPriceView.topAnchor.constraint(equalTo: nftInfoView.bottomAnchor, constant: 24),
             nftPriceView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -209,23 +207,15 @@ final class NFTViewController: UIViewController {
             
             nftPriceValueLabel.topAnchor.constraint(equalTo: nftPriceLabel.bottomAnchor, constant: 2),
             nftPriceValueLabel.leadingAnchor.constraint(equalTo: nftPriceView.leadingAnchor),
-            //nftPriceValueLabel.trailingAnchor.constraint(lessThanOrEqualTo: nftPriceView.trailingAnchor),
             
             nftAddToCartButton.topAnchor.constraint(equalTo: nftPriceView.topAnchor),
             nftAddToCartButton.widthAnchor.constraint(equalTo: nftPriceView.widthAnchor, multiplier: 0.7),
-            //nftAddToCartButton.leadingAnchor.constraint(equalTo: nftPriceValueLabel.trailingAnchor, constant: 28),
             nftAddToCartButton.trailingAnchor.constraint(equalTo: nftPriceView.trailingAnchor),
             nftAddToCartButton.bottomAnchor.constraint(equalTo: nftPriceView.bottomAnchor),
             
             priceListTableView.topAnchor.constraint(equalTo: nftPriceView.bottomAnchor, constant: 24),
             priceListTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             priceListTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            //priceListTableView.heightAnchor.constraint(equalToConstant: priceListTableView.intrinsicContentSize.height),
-            
-            //priceListTableView.bottomAnchor.constraint(equalTo: priceListTableView.topAnchor, constant: CGFloat(72 * convertService.currenciesCount)),
-            //priceListTableView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
-            //priceListTableView.heightAnchor.constraint(equalToConstant: 2000),
-            //priceListTableView.bottomAnchor.constraint(equalTo: authorsWebsiteButton.topAnchor),
             
             authorsWebsiteButton.topAnchor.constraint(equalTo: priceListTableView.bottomAnchor, constant: 24),
             authorsWebsiteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -233,11 +223,7 @@ final class NFTViewController: UIViewController {
             authorsWebsiteButton.heightAnchor.constraint(equalToConstant: 40),
             authorsWebsiteButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
-            //priceListTableView.bottomAnchor.constraint(equalTo: authorsWebsiteButton.topAnchor),
-            
-            //contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.bottomAnchor.constraint(equalTo: authorsWebsiteButton.bottomAnchor),
-            //contentView.bottomAnchor.constraint(greaterThanOrEqualTo: scrollView.bottomAnchor), //это работает
+            contentView.bottomAnchor.constraint(equalTo: authorsWebsiteButton.bottomAnchor)
         ])
     }
     
