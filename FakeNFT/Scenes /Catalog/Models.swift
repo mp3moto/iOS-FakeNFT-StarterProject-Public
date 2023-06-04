@@ -70,4 +70,5 @@ struct Cryptocurrency {
 
 struct NFTPriceListItem {
     let cryptocurrency: Cryptocurrency
+    let toCrypto: Double
 }

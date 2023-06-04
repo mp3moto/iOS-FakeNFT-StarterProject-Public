@@ -5,6 +5,7 @@ enum LabelStyles: String {
     case nftName
     case priceLabel
     case cryptocurrencyName
+    case priceInCrypto
 }
 
 final class CustomLabel: UILabel {
@@ -22,13 +23,15 @@ final class CustomLabel: UILabel {
             font = CustomFont.font(name: .SFProTextBold, size: 22)
         case .priceLabel:
             font = CustomFont.font(name: .SFProTextRegular, size: 15)
-        case .cryptocurrencyName:
+        case .cryptocurrencyName, .priceInCrypto:
             font = CustomFont.font(name: .SFProTextRegular, size: 13)
         }
         
         switch style {
         case .nftCollectionNameInNFTCollectionList, .nftName, .priceLabel, .cryptocurrencyName:
             textColor = UIColor.NFTBlack
+        case .priceInCrypto:
+            textColor = UIColor.NFTGreen
         }
     }
     

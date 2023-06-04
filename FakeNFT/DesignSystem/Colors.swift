@@ -42,6 +42,7 @@ extension UIColor {
     static let NFTAlwaysBlack = UIColor(named: "NFTAlwaysBlack") ?? UIColor.black
     static let NFTWhite = UIColor(named: "NFTWhite") ?? UIColor.white
     static let NFTLinkBlue = UIColor(named: "NFTLinkBlue") ?? UIColor.blue
+    static let NFTGreen = UIColor(named: "NFTGreen") ?? UIColor.green
     static let starYellow = UIColor(named: "starYellow") ?? UIColor.yellow
     static let starGray = UIColor(named: "starGray") ?? UIColor.gray
 }

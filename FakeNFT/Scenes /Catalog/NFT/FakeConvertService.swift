@@ -6,21 +6,21 @@ final class FakeConvertService: CryptoConverterProtocol {
     func convertUSD(to coin: CryptoCoin, amount: Double) -> Double {
         switch coin {
         case .BTC:
-            return 0.000036804135018
+            return 0.000036804135018 * amount
         case .APE:
-            return 0.319488817891374
+            return 0.319488817891374 * amount
         case .ADA:
-            return 2.631578947368421
+            return 2.631578947368421 * amount
         case .DOGE:
-            return 13.793103448275862
+            return 13.793103448275862 * amount
         case .ETH:
-            return 0.000525533021867
+            return 0.000525533021867 * amount
         case .SHIB:
-            return 115740.740740740740741
+            return 115740.740740740740741 * amount
         case .SOL:
-            return 0.047348484848485
+            return 0.047348484848485 * amount
         case .USDT:
-            return 1.0
+            return 1.0 * amount
         }
     }
     
