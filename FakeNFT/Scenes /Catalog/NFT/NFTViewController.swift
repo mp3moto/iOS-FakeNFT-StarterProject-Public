@@ -60,6 +60,7 @@ final class NFTViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.backgroundColor = UIColor.NFTBlack
         button.setTitleColor(UIColor.NFTWhite, for: .normal)
+        button.titleLabel?.font = CustomFont.font(name: .SFProTextBold, size: 17)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -69,7 +70,17 @@ final class NFTViewController: UIViewController {
     
     private let priceListTableView = ContentSizedTableView()
     
-    
+    private let authorsWebsiteButton: UIButton = {
+        let button = UIButton(frame: .zero)
+        button.setTitle("Перейти на сайт продавца", for: .normal)
+        button.layer.cornerRadius = 16
+        button.setTitleColor(UIColor.NFTBlack, for: .normal)
+        button.titleLabel?.font = CustomFont.font(name: .SFProTextRegular, size: 15)
+        button.layer.borderColor = UIColor.NFTBlack.cgColor
+        button.layer.borderWidth = 1
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     init(id: Int) {
         self.id = id
@@ -111,6 +122,10 @@ final class NFTViewController: UIViewController {
                 (self.navigationController?.navigationBar.frame.height ?? 0.0)
         }
         
+        var bottombarHeight: CGFloat {
+            tabBarController?.tabBar.frame.height ?? 0
+        }
+        
         view.backgroundColor = .systemBackground
         
         view.addSubview(scrollView)
@@ -131,6 +146,7 @@ final class NFTViewController: UIViewController {
         nftPriceView.addSubview(nftPriceValueLabel)
         nftPriceView.addSubview(nftAddToCartButton)
         contentView.addSubview(priceListTableView)
+        contentView.addSubview(authorsWebsiteButton)
 
         nftName.text = "Daisy"
         nftCollectionName.text = "Peach"
@@ -148,8 +164,8 @@ final class NFTViewController: UIViewController {
             scrollView.topAnchor.constraint(equalTo:  view.topAnchor, constant: -topbarHeight),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor),
-            //scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            //scrollView.bottomAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -bottombarHeight),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -204,11 +220,24 @@ final class NFTViewController: UIViewController {
             priceListTableView.topAnchor.constraint(equalTo: nftPriceView.bottomAnchor, constant: 24),
             priceListTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             priceListTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            priceListTableView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
-            //priceListTableView.heightAnchor.constraint(equalToConstant: 2000),
+            //priceListTableView.heightAnchor.constraint(equalToConstant: priceListTableView.intrinsicContentSize.height),
             
-            //contentView.bottomAnchor.constraint(equalTo: priceListTableView.bottomAnchor)
-            contentView.bottomAnchor.constraint(greaterThanOrEqualTo: scrollView.bottomAnchor),
+            //priceListTableView.bottomAnchor.constraint(equalTo: priceListTableView.topAnchor, constant: CGFloat(72 * convertService.currenciesCount)),
+            //priceListTableView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
+            //priceListTableView.heightAnchor.constraint(equalToConstant: 2000),
+            //priceListTableView.bottomAnchor.constraint(equalTo: authorsWebsiteButton.topAnchor),
+            
+            authorsWebsiteButton.topAnchor.constraint(equalTo: priceListTableView.bottomAnchor, constant: 24),
+            authorsWebsiteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            authorsWebsiteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            authorsWebsiteButton.heightAnchor.constraint(equalToConstant: 40),
+            authorsWebsiteButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            
+            //priceListTableView.bottomAnchor.constraint(equalTo: authorsWebsiteButton.topAnchor),
+            
+            //contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.bottomAnchor.constraint(equalTo: authorsWebsiteButton.bottomAnchor),
+            //contentView.bottomAnchor.constraint(greaterThanOrEqualTo: scrollView.bottomAnchor), //это работает
         ])
     }
     
