@@ -2,19 +2,15 @@ import UIKit
 
 final class CollectionViewController: UIViewController {
     var viewModel: CollectionViewModelProtocol
-    //var nftCollectionId: Int
-    //var networkClient: NetworkClient
     
     private let contentView: UIView = {
         let view = UIView(frame: .zero)
-        view.backgroundColor = .green
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private let scrollView: UIScrollView = {
         let view = UIScrollView(frame: .zero)
-        view.backgroundColor = .red
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -40,7 +36,7 @@ final class CollectionViewController: UIViewController {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 28
         let attrString = NSMutableAttributedString(string: "")
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
         label.attributedText = attrString
         
         label.font = CustomFont.font(name: .SFProTextBold, size: 22)
@@ -60,7 +56,7 @@ final class CollectionViewController: UIViewController {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 18
         let attrString = NSMutableAttributedString(string: "Автор коллекции:")
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range: NSMakeRange(0, attrString.length))
         label.attributedText = attrString
         
         label.font = CustomFont.font(name: .SFProTextRegular, size: 13)
@@ -74,7 +70,7 @@ final class CollectionViewController: UIViewController {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 20
         let attrString = NSMutableAttributedString(string: "")
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range: NSMakeRange(0, attrString.length))
         label.attributedText = attrString
         
         label.font = CustomFont.font(name: .SFProTextRegular, size: 15)
@@ -96,23 +92,13 @@ final class CollectionViewController: UIViewController {
         
         label.font = CustomFont.font(name: .SFProTextRegular, size: 13)
         label.textColor = UIColor.NFTBlack
-        label.backgroundColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let nftItemsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let nftItemsCollectionView = ContentSizedCollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
-    /*
-    private let nftItemsCollectionView: UICollectionView = {
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collection.translatesAutoresizingMaskIntoConstraints = false
-        return collection
-    }()
-    */
     init(viewModel: CollectionViewModelProtocol) {
-        //self.nftCollectionId = nftCollectionId
-        //self.networkClient = networkClient
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -123,7 +109,7 @@ final class CollectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //nftItemsCollectionView.register(SimpleCell.self, forCellWithReuseIdentifier: SimpleCell.reuseIdentifier)
+        nftItemsCollectionView.register(NFTItemCell.self, forCellWithReuseIdentifier: NFTItemCell.reuseIdentifier)
         nftItemsCollectionView.translatesAutoresizingMaskIntoConstraints = false
         nftItemsCollectionView.dataSource = self
         nftItemsCollectionView.delegate = self
@@ -132,18 +118,12 @@ final class CollectionViewController: UIViewController {
         setupConstraints()
         bind()
         
-        //initialize(viewModel: CollectionViewModel(model: CollectionModel(networkClient: networkClient)))
         //TODO: 🤔 наверное, лучше передать готовую структуру из родительского ViewController, чем запрашивать заново
             viewModel.getNFTCollectionInfo()
         //----------
         
     }
-    /*
-    func initialize(viewModel: CollectionViewModelProtocol) {
-        self.viewModel = viewModel
-        bind()
-    }
-    */
+
     func bind() {
         viewModel.onNFTCollectionInfoUpdate = { [weak self] in
             guard let self = self else { return }
@@ -176,13 +156,18 @@ final class CollectionViewController: UIViewController {
     }
     
     private func setupConstraints() {
+        var topbarHeight: CGFloat {
+            return (navigationController?.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0) +
+                (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        }
+        
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: -topbarHeight),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            contentView.topAnchor.constraint(equalTo: view.topAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
@@ -220,10 +205,9 @@ final class CollectionViewController: UIViewController {
             nftItemsCollectionView.topAnchor.constraint(equalTo: collectionDescriptionLabel.bottomAnchor, constant: 24),
             nftItemsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nftItemsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            nftItemsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            //nftItemsCollectionView.heightAnchor.constraint(equalToConstant: 300),
+            nftItemsCollectionView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
             
-            contentView.bottomAnchor.constraint(equalTo: nftItemsCollectionView.bottomAnchor, constant: 20)
+            contentView.bottomAnchor.constraint(equalTo: nftItemsCollectionView.bottomAnchor)
         ])
     }
     
@@ -255,10 +239,9 @@ final class CollectionViewController: UIViewController {
     }
     
     func updateNFTCollectionItems() {
-        print(viewModel.nftCollectionItems)
-        /*DispatchQueue.main.async { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             self?.nftItemsCollectionView.reloadData()
-        }*/
+        }
     }
     
     @objc private func showAuthorsWebsite(sender: UITapGestureRecognizer) {
@@ -268,28 +251,21 @@ final class CollectionViewController: UIViewController {
 }
 
 extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        //categories?.count ?? 0
-        1
-    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //print("viewModel NFTItemsCount = \(viewModel.NFTItemsCount)")
         return viewModel.nftCollectionItemsCount ?? 0
-        //0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SimpleCell.reuseIdentifier, for: indexPath) as? SimpleCell,
-              let cellViewModel = viewModel.nftCollection
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NFTItemCell.reuseIdentifier, for: indexPath) as? NFTItemCell,
+              let cellViewModel = viewModel.nftCollectionItems?[indexPath.row]
         else { return UICollectionViewCell() }
         
-        //cell.viewModel = cellViewModel
+        cell.viewModel = cellViewModel
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        10
+        1
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -297,6 +273,6 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (collectionView.bounds.width / 3) - 4, height: 192)
+        return CGSize(width: (collectionView.bounds.width / 3) - 6, height: 172)
     }
 }

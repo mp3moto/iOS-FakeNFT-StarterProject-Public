@@ -110,8 +110,8 @@ final class NFTViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         //navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "noLike"), style: .plain, target: self, action: #selector(toggleLike))
         
-        let button = UIBarButtonItem(image: UIImage(named: "like"), style: .plain, target: self, action: #selector(toggleLike))
-        button.tintColor = UIColor(hexString: "#F56B6C")
+        let button = UIBarButtonItem(image: UIImage(named: "noLike"), style: .plain, target: self, action: #selector(toggleLike))
+        //button.tintColor = UIColor(hexString: "#F56B6C")
         navigationItem.rightBarButtonItem = button
     }
     //----------
@@ -121,11 +121,11 @@ final class NFTViewController: UIViewController {
             return (navigationController?.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0) +
                 (self.navigationController?.navigationBar.frame.height ?? 0.0)
         }
-        
+        /*
         var bottombarHeight: CGFloat {
             tabBarController?.tabBar.frame.height ?? 0
         }
-        
+        */
         view.backgroundColor = .systemBackground
         
         view.addSubview(scrollView)

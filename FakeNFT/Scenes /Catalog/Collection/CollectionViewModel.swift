@@ -45,6 +45,9 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     var nftCollectionId: Int
     var networkClient: NetworkClient
     
+    //TODO: Сделать это зависимостью от протокола
+    private let convertService = FakeConvertService()
+    
     init(model: CollectionModelProtocol, nftCollectionId: Int, networkClient: NetworkClient) {
         self.model = model
         self.nftCollectionId = nftCollectionId
@@ -56,7 +59,6 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             switch result {
             case .success(let data):
                 self?.nftCollection = data
-                //self?.NFTItemsCount = data.nfts.count
                 self?.onNFTCollectionInfoUpdate?()
             case .failure(let error):
                 print(error.localizedDescription)
@@ -159,39 +161,11 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             let liked = nftsLiked.likes.filter { $0 == id }.count > 0 ? true : false
             let inCart = nftsInCart.nfts.filter { $0 == id }.count > 0 ? true : false
             
-            result.append( NFTCollectionNFTItem(id: id, image: image, rating: nft.rating, name: nft.name, price: nft.price, liked: liked, inCart: inCart) )
+            result.append( NFTCollectionNFTItem(id: id, image: image, rating: nft.rating, name: nft.name, price: convertService.convertUSD(to: .ETH, amount: nft.price), liked: liked, inCart: inCart) )
         }
-        /*
-        allNFTItems.forEach {
-            guard let id = Int($0.id),
-                  nfts.filter({ $0 == id }).count > 0,
-                  let image = $0.images.first
-            else { return }
-            let liked = nftsLiked.likes.filter { $0 == id }.count > 0 ? true : false
-            let inCart = nftsInCart.nfts.filter { $0 == id }.count > 0 ? true : false
-            
-            result.append(
-                NFTCollectionNFTItem(
-                    id: id,
-                    image: image,
-                    rating: $0.rating,
-                    name: $0.name,
-                    price: $0.price,
-                    liked: liked,
-                    inCart: inCart
-                )
-            )
-        }*/
+        
         nftCollectionItems = result
         nftCollectionItemsCount = result.count
         onNFTItemsUpdate?()
-        //return result
     }
-    
-    /*
-    func getNFTItems() {
-        guard let nftItems = nftItems else { return }
-        
-    }
-     */
 }
