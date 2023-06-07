@@ -17,12 +17,8 @@ final class CollectionsAuthorWebsiteViewController: UIViewController {
         view.backgroundColor = .systemBackground
         let webview = WKWebView(frame: .zero)
         
-        //TODO: вынести это в презентер, чтобы не ругалось на главный поток
-            webview.load(URLRequest(url: website))
-        //--------------
-        
+        webview.load(URLRequest(url: website))
         webview.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(webview)
         
         NSLayoutConstraint.activate([

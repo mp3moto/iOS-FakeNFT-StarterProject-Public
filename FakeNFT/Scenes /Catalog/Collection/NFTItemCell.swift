@@ -7,7 +7,7 @@ final class NFTItemCell: UICollectionViewCell {
         didSet {
             guard let viewModel = viewModel else { return }
             
-            if let url = URL(string: viewModel.image.encodeUrl) {
+            if let url = URLEncoder(url: viewModel.image).encodedURL {
                 nftImage.kf.setImage(with: url)
             }
             renderRatingView(view: nftRatingView, value: viewModel.rating)
@@ -43,14 +43,10 @@ final class NFTItemCell: UICollectionViewCell {
         return view
     }()
     
-    private let nftNameAndPriceView: UIView = {
-        let view = UIStackView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let nftNameAndPriceView = UIViewAutoLayout()
     
-    private let nftName = CustomLabel(style: .nftCollectionNameInNFTCollectionList)
-    private let nftPrice = CustomLabel(style: .priceInNFTCell)
+    private let nftName = StylizedLabel(style: .nftCollectionNameInNFTCollectionList)
+    private let nftPrice = StylizedLabel(style: .priceInNFTCell)
     
     private let cartButton: UIButton = {
         let button = UIButton()
@@ -130,10 +126,11 @@ final class NFTItemCell: UICollectionViewCell {
             }
         }
     }
-    
+
     func starView(filled: Bool) -> UIImageView {
         let star = UIImageView(image: UIImage(named: "star")?.withRenderingMode(.alwaysTemplate))
         star.tintColor = filled ? UIColor.starYellow : UIColor.starGray
         return star
     }
+
 }

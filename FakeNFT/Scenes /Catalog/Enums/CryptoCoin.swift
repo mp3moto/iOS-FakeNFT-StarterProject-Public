@@ -10,8 +10,3 @@ enum CryptoCoin: String {
     case SOL
     case USDT
 }
-
-protocol CryptoConverterProtocol {
-    func convertUSD(to: CryptoCoin, amount: Double) -> Double
-    func getCryptocurrencies() -> [Cryptocurrency]
-}

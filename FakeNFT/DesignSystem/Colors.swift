@@ -37,7 +37,6 @@ extension UIColor {
     static let textOnPrimary = UIColor.white
     static let textOnSecondary = UIColor.black
     
-    //Renat
     static let NFTBlack = UIColor(named: "NFTBlack") ?? UIColor.black
     static let NFTAlwaysBlack = UIColor(named: "NFTAlwaysBlack") ?? UIColor.black
     static let NFTWhite = UIColor(named: "NFTWhite") ?? UIColor.white

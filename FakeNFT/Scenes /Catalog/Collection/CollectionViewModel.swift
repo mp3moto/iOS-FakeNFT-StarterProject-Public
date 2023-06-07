@@ -1,21 +1,5 @@
 import Foundation
 
-//MARK: вынести протоколы в отдельные файлы по завешению
-protocol CollectionViewModelProtocol {
-    var onNFTCollectionInfoUpdate: (() -> Void)? { get set }
-    var onNFTAuthorUpdate: (() -> Void)? { get set }
-    var onNFTItemsUpdate: (() -> Void)? { get set }
-    
-    var nftCollection: NFTCollection? { get }
-    var nftCollectionAuthor: NFTCollectionAuthor? { get }
-    var nftCollectionItems: [NFTCollectionNFTItem]? { get }
-    var nftCollectionItemsCount: Int? { get }
-
-    func getNFTCollectionInfo()
-    func getNFTCollectionAuthor(id: Int)
-    func getNFTCollectionItems()
-}
-
 final class CollectionViewModel: CollectionViewModelProtocol {
     var onNFTCollectionInfoUpdate: (() -> Void)?
     var onNFTAuthorUpdate: (() -> Void)?
@@ -38,20 +22,17 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     }
     
     var model: CollectionModelProtocol
-    private(set) var nftCollection: NFTCollection?
-    var nftCollectionAuthor: NFTCollectionAuthor?
-    var nftCollectionItems: [NFTCollectionNFTItem]?
-    var nftCollectionItemsCount: Int?
     var nftCollectionId: Int
-    var networkClient: NetworkClient
+    var converter: CryptoConverterProtocol
+    private(set) var nftCollection: NFTCollection?
+    private(set) var nftCollectionAuthor: NFTCollectionAuthor?
+    private(set) var nftCollectionItems: [NFTCollectionNFTItem]?
+    private(set) var nftCollectionItemsCount: Int?
     
-    //TODO: Сделать это зависимостью от протокола
-    private let convertService = FakeConvertService()
-    
-    init(model: CollectionModelProtocol, nftCollectionId: Int, networkClient: NetworkClient) {
+    init(model: CollectionModelProtocol, nftCollectionId: Int, converter: CryptoConverterProtocol) {
         self.model = model
         self.nftCollectionId = nftCollectionId
-        self.networkClient = networkClient
+        self.converter = converter
     }
     
     func getNFTCollectionInfo() {
@@ -161,7 +142,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             let liked = nftsLiked.likes.filter { $0 == id }.count > 0 ? true : false
             let inCart = nftsInCart.nfts.filter { $0 == id }.count > 0 ? true : false
             
-            result.append( NFTCollectionNFTItem(id: id, image: image, rating: nft.rating, name: nft.name, price: convertService.convertUSD(to: .ETH, amount: nft.price), liked: liked, inCart: inCart) )
+            result.append( NFTCollectionNFTItem(id: id, image: image, rating: nft.rating, name: nft.name, price: converter.convertUSD(to: .ETH, amount: nft.price), liked: liked, inCart: inCart) )
         }
         
         nftCollectionItems = result

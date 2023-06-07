@@ -1,7 +1,8 @@
 import UIKit
+import Kingfisher
 
 final class NFTImageSlideViewController: UIViewController {
-    private let image: UIImage
+    private let imageUrl: String
     private let asChildView: Bool
     
     private let imageView: UIImageView = {
@@ -13,8 +14,8 @@ final class NFTImageSlideViewController: UIViewController {
         return view
     }()
     
-    init(image: UIImage, asChildView: Bool) {
-        self.image = image
+    init(imageUrl: String, asChildView: Bool) {
+        self.imageUrl = imageUrl
         self.asChildView = asChildView
         super.init(nibName: nil, bundle: nil)
     }
@@ -31,7 +32,9 @@ final class NFTImageSlideViewController: UIViewController {
     
     func setupUI() {
         view.backgroundColor = .systemBackground
-        imageView.image = image
+        if let url = URL(string: imageUrl.encodeUrl) {
+            imageView.kf.setImage(with: url)
+        }
         
         if asChildView {
             imageView.layer.cornerRadius = 40

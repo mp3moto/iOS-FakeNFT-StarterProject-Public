@@ -1,21 +1,5 @@
 import Foundation
 
-enum SortAttribute {
-    case name
-    case nftCount
-}
-
-//MARK: вынести протоколы в отдельные файлы по завешению
-protocol CatalogViewModelProtocol {
-    var onNFTCollectionsUpdate: (() -> Void)? { get set }
-    var NFTCollections: [NFTCollection]? { get }
-    var NFTCollectionsList: [NFTCollectionListItem]? { get }
-    var NFTCollectionsCount: Int? { get }
-    func getNFTCollections()
-    func getCellViewModel(at indexPath: IndexPath) -> NFTCollectionListItem?
-    func sortNFTCollections(by: SortAttribute)
-}
-
 final class CatalogViewModel: CatalogViewModelProtocol {
     var onNFTCollectionsUpdate: (() -> Void)?
     var NFTCollections: [NFTCollection]?

@@ -9,9 +9,8 @@ final class CatalogCell: UITableViewCell {
             guard let viewModel = viewModel else { return }
             collectionName.text = "\(viewModel.name) (\(viewModel.nftsCount))"
             
-            if let url = URL(string: viewModel.cover.encodeUrl) {
-                collectionImage.kf.setImage(with: url)
-            }
+            guard let url = URLEncoder(url: viewModel.cover).encodedURL else { return }
+            collectionImage.kf.setImage(with: url)
         }
     }
     
@@ -29,7 +28,7 @@ final class CatalogCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private let collectionName = CustomLabel(style: .nftCollectionNameInNFTCollectionList)
+    private let collectionName = StylizedLabel(style: .nftCollectionNameInNFTCollectionList)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

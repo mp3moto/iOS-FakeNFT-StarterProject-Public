@@ -117,15 +117,6 @@ final class NFTViewController: UIViewController {
     //----------
     
     func setupUI() {
-        var topbarHeight: CGFloat {
-            return (navigationController?.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0) +
-                (self.navigationController?.navigationBar.frame.height ?? 0.0)
-        }
-        /*
-        var bottombarHeight: CGFloat {
-            tabBarController?.tabBar.frame.height ?? 0
-        }
-        */
         view.backgroundColor = .systemBackground
         
         view.addSubview(scrollView)
@@ -133,6 +124,7 @@ final class NFTViewController: UIViewController {
         
         let childView = generateSlideShow()
         childView.translatesAutoresizingMaskIntoConstraints = false
+        childView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openSlideShow)))
         
         contentView.addSubview(childView)
         contentView.addSubview(nftInfoView)
@@ -161,16 +153,6 @@ final class NFTViewController: UIViewController {
         priceListTableView.delegate = self
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo:  view.topAnchor, constant: -topbarHeight),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            //scrollView.bottomAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -bottombarHeight),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
             childView.topAnchor.constraint(equalTo: contentView.topAnchor),
             childView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             childView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -180,6 +162,50 @@ final class NFTViewController: UIViewController {
             nftInfoView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nftInfoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             nftInfoView.bottomAnchor.constraint(equalTo: nftInfoView.topAnchor, constant: 28),
+        ])
+    }
+    
+    func generateSlideShow() -> UIView {
+        let slide1 = NFTImageSlideViewController(image: UIImage(named: "nftSample")!, asChildView: true)
+        let slide2 = NFTImageSlideViewController(image: UIImage(named: "cover")!, asChildView: true)
+        let slideShowVC = NFTImageSlideShowPageViewController(orderedViewControllers: [slide1, slide2])
+        addChild(slideShowVC)
+        slideShowVC.didMove(toParent: self)
+        return slideShowVC.view
+    }
+    
+    func renderRatingView(view: UIStackView, value: Int) {
+        let val = value < 0 || value > 5 ? 0 : value
+        let grayStarsCount = 5 - val
+        for _ in 1...val {
+            view.addArrangedSubview(starView(filled: true))
+        }
+        for _ in 1...grayStarsCount {
+            view.addArrangedSubview(starView(filled: false))
+        }
+    }
+    
+    func starView(filled: Bool) -> UIImageView {
+        let star = UIImageView(image: UIImage(named: "star")?.withRenderingMode(.alwaysTemplate))
+        star.tintColor = filled ? UIColor.starYellow : UIColor.starGray
+        return star
+    }
+    
+    func setupConstraints() {
+        var topbarHeight: CGFloat {
+            return (navigationController?.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0) +
+                (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        }
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo:  view.topAnchor, constant: -topbarHeight),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             nftNameAndRatingView.topAnchor.constraint(equalTo: nftInfoView.topAnchor),
             nftNameAndRatingView.bottomAnchor.constraint(equalTo: nftInfoView.bottomAnchor),
@@ -221,44 +247,21 @@ final class NFTViewController: UIViewController {
             authorsWebsiteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             authorsWebsiteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             authorsWebsiteButton.heightAnchor.constraint(equalToConstant: 40),
-            authorsWebsiteButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            authorsWebsiteButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -36),
             
             contentView.bottomAnchor.constraint(equalTo: authorsWebsiteButton.bottomAnchor)
         ])
     }
     
-    func generateSlideShow() -> UIView {
-        let slide1 = NFTImageSlideViewController(image: UIImage(named: "nftSample")!, asChildView: true)
-        let slide2 = NFTImageSlideViewController(image: UIImage(named: "cover")!, asChildView: true)
-        let slideShowVC = NFTImageSlideShowPageViewController(orderedViewControllers: [slide1, slide2])
-        addChild(slideShowVC)
-        slideShowVC.didMove(toParent: self)
-        return slideShowVC.view
-    }
-    
-    func renderRatingView(view: UIStackView, value: Int) {
-        let val = value < 0 || value > 5 ? 0 : value
-        let grayStarsCount = 5 - val
-        for _ in 1...val {
-            view.addArrangedSubview(starView(filled: true))
-        }
-        for _ in 1...grayStarsCount {
-            view.addArrangedSubview(starView(filled: false))
-        }
-    }
-    
-    func starView(filled: Bool) -> UIImageView {
-        let star = UIImageView(image: UIImage(named: "star")?.withRenderingMode(.alwaysTemplate))
-        star.tintColor = filled ? UIColor.starYellow : UIColor.starGray
-        return star
-    }
-    
-    func setupConstraints() {
-        
-    }
-    
     @objc private func toggleLike() {
         
+    }
+    
+    @objc private func openSlideShow() {
+        let slide1 = NFTImageSlideViewController(image: UIImage(named: "nftSample")!, asChildView: false)
+        let slide2 = NFTImageSlideViewController(image: UIImage(named: "cover")!, asChildView: false)
+        let vc = NFTImageSlideShowPageViewController(orderedViewControllers: [slide1, slide2])
+        present(vc, animated: true)
     }
 }
 

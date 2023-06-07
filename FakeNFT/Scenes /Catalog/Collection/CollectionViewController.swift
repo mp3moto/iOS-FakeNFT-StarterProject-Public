@@ -3,11 +3,7 @@ import UIKit
 final class CollectionViewController: UIViewController {
     var viewModel: CollectionViewModelProtocol
     
-    private let contentView: UIView = {
-        let view = UIView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let contentView = UIViewAutoLayout()
     
     private let scrollView: UIScrollView = {
         let view = UIScrollView(frame: .zero)
@@ -25,31 +21,12 @@ final class CollectionViewController: UIViewController {
         return view
     }()
     
-    private let collectionNameView: UIView = {
-        let view = UIView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let collectionNameLabel: UILabel = {
-        let label = UILabel()
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 28
-        let attrString = NSMutableAttributedString(string: "")
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
-        label.attributedText = attrString
-        
-        label.font = CustomFont.font(name: .SFProTextBold, size: 22)
-        label.textColor = UIColor.NFTBlack
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let authorView: UIView = {
-        let view = UIView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let collectionNameView = UIViewAutoLayout()
+    private let collectionNameLabel = LineHeightedLabel(lineHeight: 28, withFont: UIFont.nftCollectionName, color: UIColor.NFTBlack)
+    private let authorView = UIViewAutoLayout()
+    //private let collectionAuthorLabel = LineHeightedLabel(lineHeight: 18, withFont: UIFont.nftDescription, color: UIColor.NFTBlack, string: "Автор коллекции:")
+    private let collectionAuthorNameLabel = LineHeightedLabel(lineHeight: 20, withFont: UIFont.nftAuthor, color: UIColor.NFTLinkBlue, enabledUserInteraction: true)
+    private let collectionDescriptionLabel = LineHeightedLabel(lineHeight: 3, withFont: UIFont.nftDescription, color: UIColor.NFTBlack, linesCount: 0)
     
     private let collectionAuthorLabel: UILabel = {
         let label = UILabel()
@@ -57,44 +34,14 @@ final class CollectionViewController: UIViewController {
         paragraphStyle.lineSpacing = 18
         let attrString = NSMutableAttributedString(string: "Автор коллекции:")
         attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range: NSMakeRange(0, attrString.length))
+        attrString.addAttribute(NSAttributedString.Key.font, value: UIFont.nftDescription, range: NSMakeRange(0, attrString.length))
         label.attributedText = attrString
         
-        label.font = CustomFont.font(name: .SFProTextRegular, size: 13)
         label.textColor = UIColor.NFTBlack
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let collectionAuthorNameLabel: UILabel = {
-        let label = UILabel()
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 20
-        let attrString = NSMutableAttributedString(string: "")
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range: NSMakeRange(0, attrString.length))
-        label.attributedText = attrString
-        
-        label.font = CustomFont.font(name: .SFProTextRegular, size: 15)
-        label.textColor = UIColor.NFTLinkBlue
-        label.isUserInteractionEnabled = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let collectionDescriptionLabel: UILabel = {
-        let label = UILabel()
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 1.8
-        let attrString = NSMutableAttributedString(string: "")
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
-        
-        label.attributedText = attrString
-        label.numberOfLines = 0
-        
-        label.font = CustomFont.font(name: .SFProTextRegular, size: 13)
-        label.textColor = UIColor.NFTBlack
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
     private let nftItemsCollectionView = ContentSizedCollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -118,10 +65,7 @@ final class CollectionViewController: UIViewController {
         setupConstraints()
         bind()
         
-        //TODO: 🤔 наверное, лучше передать готовую структуру из родительского ViewController, чем запрашивать заново
-            viewModel.getNFTCollectionInfo()
-        //----------
-        
+        viewModel.getNFTCollectionInfo()
     }
 
     func bind() {
@@ -195,7 +139,7 @@ final class CollectionViewController: UIViewController {
             collectionAuthorLabel.trailingAnchor.constraint(lessThanOrEqualTo: authorView.trailingAnchor),
             
             collectionAuthorNameLabel.centerYAnchor.constraint(equalTo: authorView.centerYAnchor),
-            collectionAuthorNameLabel.leadingAnchor.constraint(equalTo: collectionAuthorLabel.trailingAnchor, constant: 4),
+            collectionAuthorNameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: collectionAuthorLabel.trailingAnchor, constant: 4),
             collectionAuthorNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: authorView.trailingAnchor),
             
             collectionDescriptionLabel.topAnchor.constraint(equalTo: authorView.bottomAnchor),
@@ -212,8 +156,9 @@ final class CollectionViewController: UIViewController {
     }
     
     func updateNFTCollectionDetails() {
-        print("updateNFTCollectionDetails called")
-        guard let url = URL(string: viewModel.nftCollection?.cover.encodeUrl ?? "") else { return }
+        guard let coverURL = viewModel.nftCollection?.cover,
+              let url = URLEncoder(url: coverURL).encodedURL
+        else { return }
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
@@ -245,7 +190,9 @@ final class CollectionViewController: UIViewController {
     }
     
     @objc private func showAuthorsWebsite(sender: UITapGestureRecognizer) {
-        guard let url = URL(string: viewModel.nftCollectionAuthor?.website.encodeUrl ?? "") else { return }
+        guard let website = viewModel.nftCollectionAuthor?.website,
+              let url = URLEncoder(url: website).encodedURL
+        else { return }
         navigationController?.pushViewController(CollectionsAuthorWebsiteViewController(website: url), animated: true)
     }
 }
@@ -269,7 +216,7 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
+        return 28
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
