@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 
 final class CatalogViewController: UIViewController {
     var viewModel: CatalogViewModelProtocol
@@ -60,6 +61,32 @@ final class CatalogViewController: UIViewController {
                 self?.collectionsTableView.reloadData()
             }
         }
+        
+        viewModel.updateLoadingStatus = {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                /*if self.itemsTableView.refreshControl?.isRefreshing == true {
+                    return self.refreshShowLoading(self.viewModel.isLoading)
+                }*/
+
+                self.defaultShowLoading(self.viewModel.isLoading)
+            }
+        }
+        
+        viewModel.showAlertClosure = {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+
+                let titleText = "Упс! У нас ошибка."
+                let messageText = self.viewModel.errorMessage ?? "Unknown error"
+
+                let alert = RepeatAlertMaker.make(title: titleText, message: messageText) {
+                    self.viewModel.getNFTCollections()
+                }
+
+                self.present(alert, animated: true)
+            }
+        }
     }
     
     @objc private func showSortingMenu() {
@@ -74,6 +101,16 @@ final class CatalogViewController: UIViewController {
         sortMenu.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
 
         present(sortMenu, animated: true)
+    }
+    
+    private func defaultShowLoading(_ isLoading: Bool) {
+        if isLoading {
+            ProgressHUD.show()
+        } else {
+            ProgressHUD.dismiss()
+        }
+
+        view.isUserInteractionEnabled = !isLoading
     }
 }
 
