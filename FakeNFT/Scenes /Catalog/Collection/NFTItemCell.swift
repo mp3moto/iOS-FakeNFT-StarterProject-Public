@@ -146,12 +146,10 @@ final class NFTItemCell: UICollectionViewCell {
     }
     
     @objc private func didTapCart() {
-        //print(1)
         cartTapHandle?()
     }
     
     @objc private func didTapLike() {
-        //print(2)
         likeTapHandle?()
     }
 }

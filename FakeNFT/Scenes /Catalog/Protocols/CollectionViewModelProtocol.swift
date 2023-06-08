@@ -15,7 +15,6 @@ protocol CollectionViewModelProtocol {
     var nftCollectionItemsCount: Int? { get }
     var converter: CryptoConverterProtocol { get }
 
-    func getData<T: Decodable>(url: String, type: T.Type, completion: @escaping (Result<T, Error>) -> Void)
     func getNFTCollectionInfo()
     func getNFTCollectionAuthor(id: Int)
     func getNFTCollectionItems()

@@ -60,17 +60,6 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                 self?.errorMessage = error.localizedDescription
             }
         }
-        /*
-        model.getNFTCollectionInfo(id: nftCollectionId) { [weak self] result in
-            switch result {
-            case .success(let data):
-                self?.nftCollection = data
-                self?.onNFTCollectionInfoUpdate?()
-            case .failure(let error):
-                self?.errorMessage = error.localizedDescription
-            }
-        }
-         */
     }
     
     func getNFTCollectionAuthor(id: Int) {
@@ -83,16 +72,6 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                 self?.errorMessage = error.localizedDescription
             }
         }
-        /*
-        model.getNFTCollectionAuthor(id: id) { [weak self] result in
-            switch result {
-            case .success(let data):
-                self?.nftCollectionAuthor = data
-                self?.onNFTAuthorUpdate?()
-            case .failure(let error):
-                self?.errorMessage = error.localizedDescription
-            }
-        }*/
     }
     
     func getNFTCollectionItems() {
@@ -140,20 +119,10 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                 completion(.failure(error))
             }
         }
-        /*
-        model.getAllNFTs { result in
-            switch result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-         */
     }
     
     func getLikedNFTs(completion: @escaping (Result<NFTLiked, Error>) -> Void) {
-        model.getData(url: "\(Config.baseUrl)/nft", type: NFTLiked.self) { result in
+        model.getData(url: "\(Config.baseUrl)/profile/1", type: NFTLiked.self) { result in
             switch result {
             case .success(let data):
                 completion(.success(data))
@@ -161,22 +130,10 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                 completion(.failure(error))
             }
         }
-        /*
-        model.getLikedNFTs { result in
-            switch result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }*/
     }
     
     func getNFTsInCart(completion: @escaping (Result<NFTsInCart, Error>) -> Void) {
-        model.getData(url: "\(Config.baseUrl)/nft", type: NFTsInCart.self) { result in
-            
-        }
-        model.getNFTsInCart { result in
+        model.getData(url: "\(Config.baseUrl)/orders/1", type: NFTsInCart.self) { result in
             switch result {
             case .success(let data):
                 completion(.success(data))

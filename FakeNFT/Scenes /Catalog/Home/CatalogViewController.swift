@@ -152,12 +152,10 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.tintColor = UIColor.NFTBlack
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        
-        guard let networkClient = viewModel.model.networkClient else { return }
             
         let collectionViewModel = CollectionViewModel(
             model: CollectionModel(
-                networkClient: networkClient
+                networkClient: viewModel.model.networkClient
             ),
             nftCollectionId: collectionId,
             converter: FakeConvertService()

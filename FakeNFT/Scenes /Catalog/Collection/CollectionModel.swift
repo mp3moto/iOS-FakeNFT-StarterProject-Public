@@ -24,111 +24,8 @@ final class CollectionModel: CollectionModelProtocol {
         }
     }
     
-    func getNFTCollectionInfo(id: Int, completion: @escaping (Result<NFTCollection, Error>) -> Void) {
-        guard let url = URL(string: "\(Config.baseUrl)/collections/\(id)")
-        else {
-            completion(.failure(NSError(domain: "Invalid URL", code: 1)))
-            return
-        }
-        
-        let request = AnyRequest(endpoint: url)
-        networkClient.send(request: request, type: NFTCollection.self) { result in
-            switch result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func getNFTCollectionAuthor(id: Int, completion: @escaping (Result<NFTCollectionAuthor, Error>) -> Void) {
-        guard let url = URL(string: "\(Config.baseUrl)/users/\(id)")
-        else {
-            completion(.failure(NSError(domain: "Invalid URL", code: 1)))
-            return
-        }
-        let request = AnyRequest(endpoint: url)
-        networkClient.send(request: request, type: NFTCollectionAuthor.self) { result in
-            switch result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func getAllNFTs(completion: @escaping (Result<[NFTItem], Error>) -> Void) {
-        guard let url = URL(string: "\(Config.baseUrl)/nft")
-        else {
-            completion(.failure(NSError(domain: "Invalid URL", code: 1)))
-            return
-        }
-        let request = AnyRequest(endpoint: url)
-        networkClient.send(request: request, type: [NFTItem].self) { result in
-            switch result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func getLikedNFTs(completion: @escaping (Result<NFTLiked, Error>) -> Void) {
-        guard let url = URL(string: "\(Config.baseUrl)/profile/1")
-        else {
-            completion(.failure(NSError(domain: "Invalid URL", code: 1)))
-            return
-        }
-        let request = AnyRequest(endpoint: url)
-        networkClient.send(request: request, type: User.self) { result in
-            switch result {
-            case .success(let data):
-                completion(.success(NFTLiked(likes: data.likes)))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func getUser(completion: @escaping (Result<User, Error>) -> Void) {
-        guard let url = URL(string: "\(Config.baseUrl)/profile/1")
-        else {
-            completion(.failure(NSError(domain: "Invalid URL", code: 1)))
-            return
-        }
-        let request = AnyRequest(endpoint: url)
-        networkClient.send(request: request, type: User.self) { result in
-            switch result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func getNFTsInCart(completion: @escaping (Result<NFTsInCart, Error>) -> Void) {
-        guard let url = URL(string: "\(Config.baseUrl)/orders/1")
-        else {
-            completion(.failure(NSError(domain: "Invalid URL", code: 1)))
-            return
-        }
-        let request = AnyRequest(endpoint: url)
-        networkClient.send(request: request, type: NFTsInCart.self) { result in
-            switch result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
     func toggleNFTItemInCart(id: Int, completion: @escaping (Result<Order, Error>) -> Void) {
-        getNFTsInCart { [weak self] result in
+        getData(url: "\(Config.baseUrl)/orders/1", type: NFTsInCart.self) { [weak self] result in
             switch result {
             case .success(let data):
                 if data.nfts.filter({ $0 == id }).count == 0 {
@@ -160,7 +57,7 @@ final class CollectionModel: CollectionModelProtocol {
     }
     
     func toggleNFTLikeInProfile(id: Int, completion: @escaping (Result<User, Error>) -> Void) {
-        getUser { [weak self] result in
+        getData(url: "\(Config.baseUrl)/profile/1", type: User.self) { [weak self] result in
             switch result {
             case .success(let data):
                 if data.likes.filter({ $0 == id }).count == 0 {
