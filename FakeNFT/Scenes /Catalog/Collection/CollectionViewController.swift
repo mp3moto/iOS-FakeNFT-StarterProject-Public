@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 
 final class CollectionViewController: UIViewController {
     var viewModel: CollectionViewModelProtocol
@@ -80,6 +81,32 @@ final class CollectionViewController: UIViewController {
         viewModel.onNFTItemsUpdate = { [weak self] in
             guard let self = self else { return }
             self.updateNFTCollectionItems()
+        }
+        viewModel.updateLoadingStatus = {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.defaultShowLoading(self.viewModel.isLoading)
+            }
+        }
+        viewModel.showAlertClosure = {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+
+                let titleText = "Упс! У нас ошибка."
+                let messageText = self.viewModel.errorMessage ?? "Unknown error"
+
+                let alert = RepeatAlertMaker.make(
+                    title: titleText,
+                    message: messageText,
+                    repeatHandle: { [weak self] in
+                        self?.viewModel.getNFTCollectionInfo()
+                    }, cancelHandle: { [weak self] in
+                        self?.viewModel.isLoading = false
+                    }
+                )
+
+                self.present(alert, animated: true)
+            }
         }
     }
     
@@ -193,7 +220,18 @@ final class CollectionViewController: UIViewController {
         guard let website = viewModel.nftCollectionAuthor?.website,
               let url = URLEncoder(url: website).encodedURL
         else { return }
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationController?.pushViewController(CollectionsAuthorWebsiteViewController(website: url), animated: true)
+    }
+    
+    private func defaultShowLoading(_ isLoading: Bool) {
+        if isLoading {
+            ProgressHUD.show()
+        } else {
+            ProgressHUD.dismiss()
+        }
+
+        view.isUserInteractionEnabled = !isLoading
     }
 }
 
@@ -208,6 +246,13 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         else { return UICollectionViewCell() }
         
         cell.viewModel = cellViewModel
+        cell.setup(
+            cartTapHandle: { [weak self] in
+                self?.viewModel.toggleCart(id: cellViewModel.id)
+            }, likeTapHandle: { [weak self] in
+                self?.viewModel.toggleLike(id: cellViewModel.id)
+            }
+        )
         return cell
     }
     

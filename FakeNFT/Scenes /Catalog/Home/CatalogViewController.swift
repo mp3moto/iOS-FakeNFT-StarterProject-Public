@@ -24,6 +24,11 @@ final class CatalogViewController: UIViewController {
         viewModel.getNFTCollections()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewModel.getNFTCollections()
+    }
+    
     private func setupNavigationBar() {
         let button = UIBarButtonItem(image: UIImage(named: "Sort"), style: .plain, target: self, action: #selector(showSortingMenu))
         button.tintColor = .black
@@ -31,6 +36,9 @@ final class CatalogViewController: UIViewController {
     }
     
     private func setupUI() {
+        ProgressHUD.animationType = .circleStrokeSpin
+        ProgressHUD.colorAnimation = UIColor.NFTBlack
+        
         view.backgroundColor = .systemBackground
         view.addSubview(navBar)
         view.addSubview(collectionsTableView)
@@ -65,10 +73,6 @@ final class CatalogViewController: UIViewController {
         viewModel.updateLoadingStatus = {
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
-                /*if self.itemsTableView.refreshControl?.isRefreshing == true {
-                    return self.refreshShowLoading(self.viewModel.isLoading)
-                }*/
-
                 self.defaultShowLoading(self.viewModel.isLoading)
             }
         }
@@ -79,11 +83,18 @@ final class CatalogViewController: UIViewController {
 
                 let titleText = "Упс! У нас ошибка."
                 let messageText = self.viewModel.errorMessage ?? "Unknown error"
-
-                let alert = RepeatAlertMaker.make(title: titleText, message: messageText) {
-                    self.viewModel.getNFTCollections()
-                }
-
+                
+                let alert = RepeatAlertMaker.make(
+                    title: titleText,
+                    message: messageText,
+                    repeatHandle: { [weak self] in
+                        self?.viewModel.getNFTCollections()
+                        
+                    }, cancelHandle: { [weak self] in
+                        self?.viewModel.isLoading = false
+                    }
+                )
+                
                 self.present(alert, animated: true)
             }
         }
@@ -139,6 +150,7 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
         navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.tintColor = UIColor.NFTBlack
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
         guard let networkClient = viewModel.model.networkClient else { return }

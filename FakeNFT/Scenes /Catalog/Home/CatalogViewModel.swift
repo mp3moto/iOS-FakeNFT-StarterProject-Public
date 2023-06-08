@@ -26,6 +26,22 @@ final class CatalogViewModel: CatalogViewModelProtocol {
     
     func getNFTCollections() {
         isLoading = true
+        
+        model.getData(url: "\(Config.baseUrl)/collections", type: [NFTCollection].self) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let data):
+                self.isLoading = false
+                self.NFTCollections = data
+                self.NFTCollectionsCount = data.count
+                self.NFTCollectionsList = self.convert(collection: data)
+                self.onNFTCollectionsUpdate?()
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+                self.isLoading = false
+            }
+        }
+        /*
         model.getNFTCollections { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -40,6 +56,7 @@ final class CatalogViewModel: CatalogViewModelProtocol {
                 self.isLoading = false
             }
         }
+         */
     }
     
     func sortNFTCollections(by: SortAttribute) {

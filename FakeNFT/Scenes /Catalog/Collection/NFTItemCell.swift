@@ -3,12 +3,14 @@ import UIKit
 final class NFTItemCell: UICollectionViewCell {
     static let reuseIdentifier = "nftItemCell"
     
+    private var cartTapHandle: (() -> Void)?
+    private var likeTapHandle: (() -> Void)?
     var viewModel: NFTCollectionNFTItem? {
         didSet {
             guard let viewModel = viewModel else { return }
             
             if let url = URLEncoder(url: viewModel.image).encodedURL {
-                nftImage.kf.setImage(with: url)
+                nftImage.load(url: url)
             }
             renderRatingView(view: nftRatingView, value: viewModel.rating)
             nftName.text = viewModel.name
@@ -28,8 +30,8 @@ final class NFTItemCell: UICollectionViewCell {
         }
     }
     
-    private let nftImage: UIImageView = {
-        let view = UIImageView(frame: .zero)
+    private let nftImage: ImageViewWithPreloading = {
+        let view = ImageViewWithPreloading()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.layer.cornerRadius = 12
@@ -48,17 +50,19 @@ final class NFTItemCell: UICollectionViewCell {
     private let nftName = StylizedLabel(style: .nftCollectionNameInNFTCollectionList)
     private let nftPrice = StylizedLabel(style: .priceInNFTCell)
     
-    private let cartButton: UIButton = {
+    lazy private var cartButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "addToCart"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(didTapCart), for: .touchUpInside)
         return button
     }()
     
-    private let likeButton: UIButton = {
+    lazy private var likeButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "like"), for: .normal)
         button.imageView?.tintColor = UIColor(hexString: "#F56B6C")
+        button.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -112,7 +116,10 @@ final class NFTItemCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func renderRatingView(view: UIStackView, value: Int) {
+    private func renderRatingView(view: UIStackView, value: Int) {
+        for view in view.subviews {
+            view.removeFromSuperview()
+        }
         let val = value < 0 || value > 5 ? 0 : value
         let grayStarsCount = 5 - val
         if val > 0 {
@@ -127,10 +134,24 @@ final class NFTItemCell: UICollectionViewCell {
         }
     }
 
-    func starView(filled: Bool) -> UIImageView {
+    private func starView(filled: Bool) -> UIImageView {
         let star = UIImageView(image: UIImage(named: "star")?.withRenderingMode(.alwaysTemplate))
         star.tintColor = filled ? UIColor.starYellow : UIColor.starGray
         return star
     }
-
+    
+    func setup(cartTapHandle: (() -> Void)? = nil, likeTapHandle: @escaping (() -> Void)) {
+        self.cartTapHandle = cartTapHandle
+        self.likeTapHandle = likeTapHandle
+    }
+    
+    @objc private func didTapCart() {
+        //print(1)
+        cartTapHandle?()
+    }
+    
+    @objc private func didTapLike() {
+        //print(2)
+        likeTapHandle?()
+    }
 }
