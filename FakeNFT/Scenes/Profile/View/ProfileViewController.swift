@@ -80,12 +80,17 @@ final class ProfileViewController: UIViewController {
         setupNavigationController()
         setupConstraints()
         bind()
-        profileViewModel.needUpdate()
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         profileViewModel.didSelect(.mainProfile)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        profileViewModel.needUpdate()
     }
 
     // MARK: - Private Funcs
