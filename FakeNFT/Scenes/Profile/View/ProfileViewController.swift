@@ -80,12 +80,17 @@ final class ProfileViewController: UIViewController {
         setupNavigationController()
         setupConstraints()
         bind()
-        profileViewModel.needUpdate()
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         profileViewModel.didSelect(.mainProfile)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        profileViewModel.needUpdate()
     }
 
     // MARK: - Private Funcs
@@ -215,7 +220,8 @@ final class ProfileViewController: UIViewController {
 
     private func pushWebsiteView(_ viewModel: WebsiteViewModelProtocol?) {
         guard let viewModel = viewModel else { return }
-        let viewController = WebsiteViewController(websiteViewModel: viewModel)
+        let url = viewModel.websiteURLString
+        let viewController = WebViewService(url: url)
         navigationController?.pushViewController(viewController, animated: true)
     }
 
