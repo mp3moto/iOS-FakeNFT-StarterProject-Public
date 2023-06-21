@@ -10,7 +10,7 @@ final class ProfileStore {
     private let networkClient: NetworkClient
     private var networkTask: NetworkTask?
 
-    init(networkClient: NetworkClient = CustomNetworkClient()) {
+    init(networkClient: NetworkClient = DefaultNetworkClient()) {
         self.networkClient = networkClient
     }
 }

@@ -10,9 +10,9 @@ final class NFTStore {
     private let networkClient: NetworkClient
     private let dispatchGroup: DispatchGroup
     private var networkTasks: [NetworkTask]
-    private var nftResults: [Result<NFTModel, Error>]
+    private var nftResults: [Result<Nft, Error>]
 
-    init(networkClient: NetworkClient = CustomNetworkClient()) {
+    init(networkClient: NetworkClient = DefaultNetworkClient()) {
         self.networkClient = networkClient
         self.dispatchGroup = DispatchGroup()
         self.networkTasks = []
@@ -29,13 +29,14 @@ final class NFTStore {
 
 extension NFTStore: NFTStoreProtocol {
 
-    func getNFTs(using nftIDs: [Int], completion: @escaping (([Result<NFTModel, Error>]) -> Void)) {
+    func getNFTs(using nftIDs: [Int], completion: @escaping (([Result<Nft, Error>]) -> Void)) {
         cancelExistingNetworkTasks()
         nftIDs.forEach { nftID in
             dispatchGroup.enter()
-            let nftPathComponentString = String(format: Constants.nftPathComponentString, nftID)
-            let nftRequest = NFTRequest(endpoint: URL(string: Constants.endpointURLString + nftPathComponentString))
-            let networkTask = networkClient.send(request: nftRequest, type: NFTModel.self) { [weak self] result in
+            let nftRequest = NftRequest(id: nftID)
+            //let nftPathComponentString = String(format: Constants.nftPathComponentString, nftID)
+            //let nftRequest = NFTRequest(endpoint: URL(string: Constants.endpointURLString + nftPathComponentString))
+            let networkTask = networkClient.send(request: nftRequest, type: Nft.self) { [weak self] result in
                 DispatchQueue.main.async {
                     self?.nftResults.append(result)
                     self?.dispatchGroup.leave()

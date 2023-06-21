@@ -6,6 +6,7 @@
 import Foundation
 
 protocol WebsiteViewModelProtocol: ViewModelProtocol {
+    var websiteURLString: String { get }
     var websiteURLRequest: URLRequest { get }
     var progressValueObservable: Observable<Float> { get }
     var shouldHideProgress: Bool { get }

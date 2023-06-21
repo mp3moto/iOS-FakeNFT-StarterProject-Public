@@ -39,12 +39,6 @@ final class NFTItemCell: UICollectionViewCell {
         return view
     }()
     
-    private let nftRatingView0: UIStackView = {
-        let view = UIStackView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     private let nftRatingView = RatingView()
     
     private let nftNameAndPriceView = UIViewAutoLayout()

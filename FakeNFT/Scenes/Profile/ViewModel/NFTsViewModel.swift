@@ -34,7 +34,7 @@ final class NFTsViewModel {
         self.nftsReceivingError = ""
     }
 
-    private func setNFTsViewModel(from nftModels: [NFTModel]) {
+    private func setNFTsViewModel(from nftModels: [Nft]) {
         nftViewModels = nftModels.map {
             NFTViewModel(name: $0.name,
                          image: URL(string: $0.images.first ?? ""),
@@ -73,7 +73,7 @@ extension NFTsViewModel: NFTsViewModelProtocol {
         }
         isNFTsDownloadingNow = true
         nftStore.getNFTs(using: nftIDs) { [weak self] results in
-            var nftModels: [NFTModel] = []
+            var nftModels: [Nft] = []
             results.forEach { result in
                 switch result {
                 case .success(let nftModel): nftModels.append(nftModel)
