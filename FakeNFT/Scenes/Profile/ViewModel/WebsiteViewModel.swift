@@ -7,7 +7,7 @@ import Foundation
 
 final class WebsiteViewModel {
 
-    private let websiteURLString: String
+    let websiteURLString: String
 
     @Observable
     private var progressValue: Float

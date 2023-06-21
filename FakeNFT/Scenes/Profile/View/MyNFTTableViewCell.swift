@@ -18,7 +18,7 @@ final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying, RatingStringM
     }()
 
     private lazy var nftDataStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [nftNameLabel, nftRatingLabel, nftAuthorLabel])
+        let stackView = UIStackView(arrangedSubviews: [nftNameLabel, nftRatingView, nftAuthorLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = 4
         stackView.axis = .vertical
@@ -54,12 +54,8 @@ final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying, RatingStringM
         label.textColor = .textColorBlack
         return label
     }()
-
-    private lazy var nftRatingLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    
+    private let nftRatingView = RatingView()
 
     private lazy var nftAuthorLabel: UILabel = {
         let label = UILabel()
@@ -124,7 +120,7 @@ final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying, RatingStringM
     func configCell(from nftViewModel: NFTViewModel) {
         nftImageView.kf.setImage(with: nftViewModel.image)
         nftNameLabel.text = nftViewModel.name
-        nftRatingLabel.attributedText = makeRatingString(from: nftViewModel.rating)
+        nftRatingView.set(length: nftViewModel.rating)
         nftAuthorLabel.attributedText = makeAttributedAuthorString(from: nftViewModel.author)
         nftPriceValueLabel.text = nftViewModel.price
     }
