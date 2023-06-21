@@ -6,7 +6,7 @@
 import UIKit
 import Kingfisher
 
-final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying, RatingStringMaker {
+final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying {
 
     private lazy var cellStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nftImageView, nftDataStackView, nftPriceStackView])
@@ -51,7 +51,7 @@ final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying, RatingStringM
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        label.textColor = .textColorBlack
+        label.textColor = .asset(.black)
         return label
     }()
     
@@ -62,7 +62,7 @@ final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying, RatingStringM
         label.translatesAutoresizingMaskIntoConstraints = false
         label.attributedText = NSMutableAttributedString(string: L10n.fromAuthorString,
                                                          attributes: [.font: UIFont.systemFont(ofSize: 15)])
-        label.textColor = .textColorBlack
+        label.textColor = .asset(.black)
         return label
     }()
 
@@ -70,7 +70,7 @@ final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying, RatingStringM
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 13)
-        label.textColor = .textColorBlack
+        label.textColor = .asset(.black)
         label.text = L10n.priceTitle
         return label
     }()
@@ -79,7 +79,7 @@ final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying, RatingStringM
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        label.textColor = .textColorBlack
+        label.textColor = .asset(.black)
         return label
     }()
 
@@ -123,5 +123,6 @@ final class MyNFTTableViewCell: UITableViewCell, ReuseIdentifying, RatingStringM
         nftRatingView.set(length: nftViewModel.rating)
         nftAuthorLabel.attributedText = makeAttributedAuthorString(from: nftViewModel.author)
         nftPriceValueLabel.text = nftViewModel.price
+        backgroundColor = .asset(.white)
     }
 }
